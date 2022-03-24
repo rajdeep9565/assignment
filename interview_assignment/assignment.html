@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sportz Interactive</title>
+</head>
+<style>
+    #root {
+display: grid;
+grid-template-columns: auto auto auto;
+padding: 5%;
+    }
+    img {
+        width:200px;
+        height: 200px;
+    }
+    h1 {
+        text-align: center;
+        margin-top: 2%;
+    }
+    body{
+        background-color:aqua;
+    }
+    #root > div {
+        background-color:beige;
+        padding: 10%;
+    }
+</style>
+<body>
+    <div id="main">
+        <h1>Player Auction Table</h1>
+        
+        <div id="root"></div>
+    </div>
+</body>
+</html>
+
+<script>
+
+async function fetchDetail(){
+    // var raj1 =document.getElementById("city").value
+    // console.log(raj1);
+    let res = await fetch
+        (`https://api.npoint.io/20c1afef1661881ddc9c`)
+       let data = await res.json();
+    console.log(data.playerList);
+    
+    data.playerList.sort((a,b)=> a.Value-b.Value);
+    append_data(data.playerList)
+   }
+   fetchDetail()
+
+   let root = document.getElementById("root")
+   function append_data(players_details) {
+       players_details.forEach(p => {
+        //    console.log(p.UpComingMatchesList[0].MDate)
+        let p_Div = document.createElement("div");
+
+        let p_img = document.createElement("img");
+        p_img.src = `./player-images/${p.Id}.jpg`
+        
+        let p_Name  = document.createElement("h3");
+        p_Name.innerText = p.PFName
+        
+        let p_skill = document.createElement("p");
+        p_skill.innerText = "Total Skills :- " + p.Skill
+
+        let p_position = document.createElement("p");
+        p_position.innerText = "Position :- " + p.SkillDesc
+
+        let value = document.createElement("p");
+        value.innerText = "Starting Value :- "  + "$" +p.Value;
+
+        let versus = document.createElement("p");
+        versus.innerText = "Next Match :- " + p.UpComingMatchesList[0].CCode + " vs "  + p.UpComingMatchesList[0].VsCCode
+        // console.log(versus);
+        let time_match = document.createElement("p");
+        time_match.innerText =  p.UpComingMatchesList[0].MDate.toLocaleString()
+        // console.log(time_match);
+       if(versus.innerText == "Next Match :-  vs ") {
+        versus.innerText = "No Upcoming Matches"
+       }
+
+        p_Div.append(p_img,p_Name,p_skill,p_position,value,versus,time_match);
+
+        root.append(p_Div)
+
+
+
+
+
+
+
+
+
+
+
+
+       });
+   }
+   append_data(players_details)
+
+
+
+
+
+
+
+
+
+
+
+</script>
